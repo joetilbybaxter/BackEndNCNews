@@ -63,6 +63,13 @@ describe('/', () => {
           .expect(200);
         expect(body.articles).to.be.descendingBy('created_at');
       });
+      it('GET status:200, each article has a comment count', async () => {
+        const { body } = await request(app)
+          .get('/api/articles')
+          .expect(200);
+        expect(body.articles[0].comment_count).to.equal('13');
+        expect(body.articles[1].comment_count).to.equal('0');
+      });
       it('GET status:200, accepts a sort_by query to sort articles', async () => {
         const { body } = await request(app)
           .get('/api/articles?sort_by=title')
