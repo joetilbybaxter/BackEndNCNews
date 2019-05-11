@@ -28,6 +28,11 @@ describe('/', () => {
         expect(body.topics).to.have.length(3);
         expect(body.topics[0]).to.contain.keys('slug', 'description');
       });
+      it('INVALID METHOD status:405', async () => {
+        return request(app)
+          .put('/api/topics')
+          .expect(405);
+      });
     });
   });
 });
