@@ -81,6 +81,12 @@ describe('/', () => {
           .expect(200);
         expect(body.articles).to.be.ascendingBy('created_at');
       });
+      it('GET status:400, when passed an invalid order query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?order=not-asc-or-desc')
+          .expect(400);
+        expect(body.msg).to.equal('Bad Request');
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')
