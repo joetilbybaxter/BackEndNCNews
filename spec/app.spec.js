@@ -85,7 +85,7 @@ describe('/', () => {
         const { body } = await request(app)
           .get('/api/articles?order=not-asc-or-desc')
           .expect(400);
-        expect(body.msg).to.equal('Bad Request');
+        expect(body.msg).to.equal('Bad Request: Invalid order query');
       });
       it('GET status:200, accepts an author query', async () => {
         const { body } = await request(app)
