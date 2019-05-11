@@ -1,10 +1,15 @@
 process.env.NODE_ENV = 'test';
 
-const { expect } = require('chai');
+const chai = require('chai');
+const chaiSorted = require('chai-sorted');
 const request = require('supertest');
 
 const app = require('../app');
 const connection = require('../db/connection');
+
+chai.use(chaiSorted);
+
+const { expect } = chai;
 
 describe('/', () => {
   beforeEach(() => connection.seed.run());
@@ -51,6 +56,12 @@ describe('/', () => {
           'created_at',
           'votes',
         );
+      });
+      it('GET status:200, articles are sorted descending by date by default', async () => {
+        const { body } = await request(app)
+          .get('/api/articles')
+          .expect(200);
+        expect(body.articles).to.be.descendingBy('created_at');
       });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
