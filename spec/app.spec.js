@@ -87,6 +87,14 @@ describe('/', () => {
           .expect(400);
         expect(body.msg).to.equal('Bad Request');
       });
+      it('GET status:200, accepts an author query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200);
+        expect(body.articles).to.satisfy(articles => {
+          return articles.every(({ author }) => author === 'butter_bridge');
+        });
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')
