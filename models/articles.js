@@ -1,8 +1,8 @@
 const connection = require('../db/connection');
 
-exports.selectArticles = () => {
+exports.selectArticles = ({ sort_by }) => {
   return connection
     .select()
     .from('articles')
-    .orderBy('created_at', 'desc');
+    .orderBy(sort_by || 'created_at', 'desc');
 };
