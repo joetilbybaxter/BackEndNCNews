@@ -1,4 +1,4 @@
-const { selectArticles } = require('../models/articles');
+const { selectArticles, selectArticleById } = require('../models/articles');
 const { checkOrderQuery } = require('./utils');
 
 exports.getArticles = async (req, res) => {
@@ -11,4 +11,10 @@ exports.getArticles = async (req, res) => {
   }
   const articles = await selectArticles(req.query);
   res.send({ articles });
+};
+
+exports.getArticleById = async (req, res) => {
+  const { article_id } = req.query;
+  const article = await selectArticleById(article_id);
+  res.send({ article });
 };

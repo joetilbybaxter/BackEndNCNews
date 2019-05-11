@@ -20,3 +20,14 @@ exports.selectArticles = async ({ sort_by, order, author, topic }) => {
   }
   return articles;
 };
+
+exports.selectArticleById = async article_id => {
+  const article = await connection
+    .select('articles.*')
+    .count({ comment_count: 'comment_id' })
+    .from('articles')
+    .leftJoin('comments', 'comments.belongs_to', 'articles.article_id')
+    .groupBy('article_id')
+    .first();
+  return article;
+};

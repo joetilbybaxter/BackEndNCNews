@@ -160,6 +160,24 @@ describe('/', () => {
           .expect(405);
         expect(body.msg).to.equal('Method Not Allowed');
       });
+
+      describe('/:article_id', () => {
+        it('GET status:200, serves up an article by id', async () => {
+          const { body } = await request(app)
+            .get('/api/articles/1')
+            .expect(200);
+          expect(body).to.contain.keys('article');
+          expect(body.article).to.be.an('object');
+          expect(body.article).to.contain.keys(
+            'article_id',
+            'author',
+            'title',
+            'topic',
+            'created_at',
+            'votes',
+          );
+        });
+      });
     });
   });
 });
