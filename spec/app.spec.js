@@ -69,6 +69,12 @@ describe('/', () => {
           .expect(200);
         expect(body.articles).to.be.descendingBy('title');
       });
+      it('GET status:200, accepts an order query (asc / desc)', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?order=asc')
+          .expect(200);
+        expect(body.articles).to.be.ascendingBy('created_at');
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')
