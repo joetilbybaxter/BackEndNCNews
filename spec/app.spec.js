@@ -69,6 +69,12 @@ describe('/', () => {
           .expect(200);
         expect(body.articles).to.be.descendingBy('title');
       });
+      it('GET status:400, when passed an invalid sort_by query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?sort_by=not-a-column')
+          .expect(400);
+        expect(body.msg).to.equal('Bad Request');
+      });
       it('GET status:200, accepts an order query (asc / desc)', async () => {
         const { body } = await request(app)
           .get('/api/articles?order=asc')
