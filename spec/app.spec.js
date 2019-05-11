@@ -95,6 +95,12 @@ describe('/', () => {
           return articles.every(({ author }) => author === 'butter_bridge');
         });
       });
+      it('GET status:404, when passed an author that does not exist', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?author=not-an-author')
+          .expect(404);
+        expect(body.msg).to.equal('Username Not Found');
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')
