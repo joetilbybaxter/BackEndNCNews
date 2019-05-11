@@ -4,6 +4,7 @@ exports.up = knex => {
     articlesTable.string('title').notNullable();
     articlesTable.string('body', 25000).notNullable();
     articlesTable.timestamp('created_at').defaultTo(knex.fn.now());
+    articlesTable.integer('votes').defaultTo(0);
     articlesTable
       .string('topic')
       .references('slug')
