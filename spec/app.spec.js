@@ -7,7 +7,7 @@ const app = require('../app');
 const connection = require('../db/connection');
 
 describe('/', () => {
-  // beforeEach(() => connection.seed.run());
+  beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
 
   describe('/api', () => {
@@ -16,6 +16,18 @@ describe('/', () => {
         .get('/api')
         .expect(200);
       expect(body.ok).to.equal(true);
+    });
+
+    describe('/topics', () => {
+      it('GET status:200, serves all topics', async () => {
+        const { body } = await request(app)
+          .get('/api/topics')
+          .expect(200);
+        expect(body).to.haveOwnProperty('topics');
+        expect(body.topics).to.be.an('array');
+        expect(body.topics).to.have.length(3);
+        expect(body.topics[0]).to.contain.keys('slug', 'description');
+      });
     });
   });
 });

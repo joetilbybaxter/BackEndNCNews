@@ -1,3 +1,13 @@
+exports.withErrorHandling = controller => {
+  return (req, res, next) => {
+    try {
+      controller(req, res);
+    } catch (err) {
+      next(err);
+    }
+  };
+};
+
 exports.routeNotFound = (req, res) => {
   res.status(404).send({ msg: 'Route Not Found' });
 };
