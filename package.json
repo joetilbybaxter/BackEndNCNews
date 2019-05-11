@@ -1,7 +1,7 @@
 {
-  "name": "team_nc_news_api",
+  "name": "nc_news_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "an example nc-news api",
   "main": "listen.js",
   "scripts": {
     "setup-dbs": "psql -f db/setup.sql",
