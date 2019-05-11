@@ -1,12 +1,12 @@
 process.env.NODE_ENV = 'test';
 
 const { expect } = require('chai');
-const supertest = require('supertest');
+const request = require('supertest');
 
 const app = require('../app');
 const connection = require('../db/connection');
 
-const request = supertest(app);
+const request = supertest;
 
 describe('/', () => {
   // beforeEach(() => connection.seed.run());
@@ -14,7 +14,7 @@ describe('/', () => {
 
   describe('/api', () => {
     it('GET status:200', () => {
-      return request
+      return request(app)
         .get('/api')
         .expect(200)
         .then(({ body }) => {
