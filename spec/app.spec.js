@@ -95,6 +95,12 @@ describe('/', () => {
           return articles.every(({ author }) => author === 'butter_bridge');
         });
       });
+      it('GET status:200, when passed an author that exists, but has no articles', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?author=lurker')
+          .expect(200);
+        expect(body.articles).to.eql([]);
+      });
       it('GET status:404, when passed an author that does not exist', async () => {
         const { body } = await request(app)
           .get('/api/articles?author=not-an-author')
