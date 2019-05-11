@@ -6,20 +6,16 @@ const request = require('supertest');
 const app = require('../app');
 const connection = require('../db/connection');
 
-const request = supertest;
-
 describe('/', () => {
   // beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
 
   describe('/api', () => {
-    it('GET status:200', () => {
-      return request(app)
+    it('GET status:200', async () => {
+      const { body } = await request(app)
         .get('/api')
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.ok).to.equal(true);
-        });
+        .expect(200);
+      expect(body.ok).to.equal(true);
     });
   });
 });
