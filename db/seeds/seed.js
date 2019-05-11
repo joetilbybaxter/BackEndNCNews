@@ -1,10 +1,7 @@
-// const {  } = require('../data');
+const { topicData } = require('../data');
 
-exports.seed = (knex, Promise) => {
-  return knex.migrate
-    .rollback()
-    .then(() => knex.migrate.latest())
-    .then(() => {
-      // insert data
-    });
+exports.seed = async knex => {
+  await knex.migrate.rollback();
+  await knex.migrate.latest();
+  return knex('topics').insert(topicData, '*');
 };
