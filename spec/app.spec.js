@@ -29,9 +29,10 @@ describe('/', () => {
         expect(body.topics[0]).to.contain.keys('slug', 'description');
       });
       it('INVALID METHOD status:405', async () => {
-        return request(app)
+        const { body } = await request(app)
           .put('/api/topics')
           .expect(405);
+        expect(body.msg).to.equal('Method Not Allowed');
       });
     });
   });
