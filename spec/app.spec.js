@@ -101,11 +101,51 @@ describe('/', () => {
           .expect(200);
         expect(body.articles).to.eql([]);
       });
+      it('GET status:400, when passed an invalid order query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?order=not-asc-or-desc')
+          .expect(400);
+        expect(body.msg).to.equal('Bad Request: Invalid order query');
+      });
+      it('GET status:200, accepts an author query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200);
+        expect(body.articles).to.satisfy(articles => {
+          return articles.every(({ author }) => author === 'butter_bridge');
+        });
+      });
+      it('GET status:200, when passed an author that exists, but has no articles', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?author=lurker')
+          .expect(200);
+        expect(body.articles).to.eql([]);
+      });
       it('GET status:404, when passed an author that does not exist', async () => {
         const { body } = await request(app)
           .get('/api/articles?author=not-an-author')
           .expect(404);
-        expect(body.msg).to.equal('Username Not Found');
+        expect(body.msg).to.equal('User Not Found');
+      });
+      it('GET status:200, accepts a topic query', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?topic=cats')
+          .expect(200);
+        expect(body.articles).to.satisfy(articles => {
+          return articles.every(({ topic }) => topic === 'cats');
+        });
+      });
+      it('GET status:200, when passed a topic that exists, but has no articles', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?topic=paper')
+          .expect(200);
+        expect(body.articles).to.eql([]);
+      });
+      it('GET status:404, when passed an topic that does not exist', async () => {
+        const { body } = await request(app)
+          .get('/api/articles?topic=not-a-topic')
+          .expect(404);
+        expect(body.msg).to.equal('Topic Not Found');
       });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
