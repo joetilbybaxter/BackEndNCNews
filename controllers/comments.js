@@ -2,6 +2,7 @@ const {
   selectComments,
   insertComment,
   updateCommentById,
+  removeCommentById,
 } = require('../models/comments');
 const { checkOrderQuery } = require('./utils');
 
@@ -28,4 +29,10 @@ exports.patchCommentById = async (req, res) => {
   const { comment_id } = req.params;
   const comment = await updateCommentById(comment_id, req.body);
   res.send({ comment });
+};
+
+exports.deleteComment = async (req, res) => {
+  const { comment_id } = req.params;
+  await removeCommentById(comment_id);
+  res.sendStatus(204);
 };

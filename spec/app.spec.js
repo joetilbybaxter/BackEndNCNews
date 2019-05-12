@@ -395,6 +395,12 @@ describe('/', () => {
           expect(body.msg).to.equal('Bad Request');
         });
 
+        it('DELETE status:204, deletes a comment', () => {
+          return request(app)
+            .delete('/api/comments/1')
+            .expect(204);
+        });
+
         it('INVALID METHOD status:405', async () => {
           const { body } = await request(app)
             .put('/api/comments/1')

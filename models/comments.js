@@ -25,3 +25,13 @@ exports.updateCommentById = async (comment_id, { inc_votes }) => {
     .returning('*');
   return comment;
 };
+
+exports.removeCommentById = async comment_id => {
+  const numberOfDeletions = await connection
+    .delete()
+    .from('comments')
+    .where({ comment_id });
+  if (!numberOfDeletions) {
+    return Promise.reject({ status: 400, msg: 'comment not found' });
+  }
+};
