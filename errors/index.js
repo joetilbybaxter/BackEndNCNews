@@ -17,9 +17,12 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handleSQLErrors = (err, req, res, next) => {
-  const badRequestCodes = ['42703', '22P02'];
+  const badRequestCodes = ['42703', '22P02', '23502'];
+  const notFoundCodes = ['23503'];
   if (badRequestCodes.includes(err.code)) {
     res.status(400).send({ msg: 'Bad Request' });
+  } else if (notFoundCodes.includes(err.code)) {
+    res.status(404).send({ msg: 'Not Found' });
   } else next(err);
 };
 

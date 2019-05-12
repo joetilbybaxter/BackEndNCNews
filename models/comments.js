@@ -12,3 +12,8 @@ exports.selectComments = async ({ article_id, sort_by, order }) => {
   }
   return comments;
 };
+
+exports.insertComment = async commentToAdd => {
+  const [comment] = await connection('comments').insert(commentToAdd, '*');
+  return comment;
+};

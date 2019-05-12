@@ -313,6 +313,49 @@ describe('/', () => {
               .expect(400);
             expect(body.msg).to.equal('Bad Request: Invalid order query');
           });
+
+          it('POST status:201, returns new comment when passed a valid comment', async () => {
+            const commentToPost = { body: 'new comment', username: 'rogersop' };
+            const { body } = await request(app)
+              .post('/api/articles/2/comments')
+              .send(commentToPost)
+              .expect(201);
+            expect(body.comment).to.contain.keys(
+              'comment_id',
+              'body',
+              'author',
+              'created_at',
+              'votes',
+              'belongs_to',
+            );
+            expect(body.comment.body).to.equal(commentToPost.body);
+            expect(body.comment.author).to.equal(commentToPost.username);
+            expect(body.comment.votes).to.equal(0);
+            expect(body.comment.belongs_to).to.equal(2);
+          });
+          it('POST status:400, when posted comment is missing properties', async () => {
+            const commentToPost = { username: 'rogersop' };
+            const { body } = await request(app)
+              .post('/api/articles/2/comments')
+              .send(commentToPost)
+              .expect(400);
+            expect(body.msg).to.equal('Bad Request');
+          });
+          it('POST status:404, when given a non-existent article_id', async () => {
+            const commentToPost = { body: 'new comment', username: 'rogersop' };
+            const { body } = await request(app)
+              .post('/api/articles/1000/comments')
+              .send(commentToPost)
+              .expect(404);
+            expect(body.msg).to.equal('Not Found');
+          });
+
+          it('INVALID METHOD status:405', async () => {
+            const { body } = await request(app)
+              .put('/api/articles/1/comments')
+              .expect(405);
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
         });
       });
     });
