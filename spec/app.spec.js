@@ -196,6 +196,12 @@ describe('/', () => {
             .expect(400);
           expect(body.msg).to.equal('Bad Request');
         });
+        it('INVALID METHOD status:405', async () => {
+          const { body } = await request(app)
+            .put('/api/articles/1')
+            .expect(405);
+          expect(body.msg).to.equal('Method Not Allowed');
+        });
       });
     });
   });
