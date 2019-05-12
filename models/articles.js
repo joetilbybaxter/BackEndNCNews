@@ -35,3 +35,11 @@ exports.selectArticleById = async article_id => {
   }
   return article;
 };
+
+exports.updateArticleById = async (article_id, { inc_votes }) => {
+  const [article] = await connection('articles')
+    .where({ article_id })
+    .increment('votes', inc_votes || 0)
+    .returning('*');
+  return article;
+};

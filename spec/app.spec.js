@@ -202,6 +202,53 @@ describe('/', () => {
             .expect(405);
           expect(body.msg).to.equal('Method Not Allowed');
         });
+
+        it('PATCH status:200, increments the votes when passed inc_votes value of 1', async () => {
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: 1 })
+            .expect(200);
+          expect(body.article.votes).to.equal(101);
+        });
+        it('PATCH status:200, increments the votes when passed inc_votes value', async () => {
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: 2 })
+            .expect(200);
+          expect(body.article.votes).to.equal(102);
+        });
+        it('PATCH status:200, increments the votes when passed a negative inc_votes value', async () => {
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: -2 })
+            .expect(200);
+          expect(body.article.votes).to.equal(98);
+        });
+        it('PATCH status:200, votes do not change when not passed an inc_votes value', async () => {
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({})
+            .expect(200);
+          expect(body.article.votes).to.equal(100);
+        });
+        it('PATCH status:200, votes changes persist', async () => {
+          await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: -5 })
+            .expect(200);
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: -1 })
+            .expect(200);
+          expect(body.article.votes).to.equal(94);
+        });
+        it('PATCH status:404, when passed an invalid ', async () => {
+          const { body } = await request(app)
+            .patch('/api/articles/1')
+            .send({ inc_votes: 'not a number' })
+            .expect(400);
+          expect(body.msg).to.equal('Bad Request');
+        });
       });
     });
   });
