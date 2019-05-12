@@ -17,7 +17,7 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handleSQLErrors = (err, req, res, next) => {
-  const badRequestCodes = ['42703'];
+  const badRequestCodes = ['42703', '22P02'];
   if (badRequestCodes.includes(err.code)) {
     res.status(400).send({ msg: 'Bad Request' });
   } else next(err);

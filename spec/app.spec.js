@@ -190,6 +190,12 @@ describe('/', () => {
             .expect(404);
           expect(body.msg).to.equal('article_id not found');
         });
+        it('GET status:404, when passed a valid non-existent article_id', async () => {
+          const { body } = await request(app)
+            .get('/api/articles/not-a-valid-id')
+            .expect(400);
+          expect(body.msg).to.equal('Bad Request');
+        });
       });
     });
   });
