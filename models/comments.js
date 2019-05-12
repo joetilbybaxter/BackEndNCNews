@@ -32,6 +32,6 @@ exports.removeCommentById = async comment_id => {
     .from('comments')
     .where({ comment_id });
   if (!numberOfDeletions) {
-    return Promise.reject({ status: 400, msg: 'comment not found' });
+    return Promise.reject({ status: 404, msg: 'comment not found' });
   }
 };

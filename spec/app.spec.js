@@ -400,6 +400,18 @@ describe('/', () => {
             .delete('/api/comments/1')
             .expect(204);
         });
+        it('DELETE status:404, when passed valid id that does not exist', async () => {
+          const { body } = await request(app)
+            .delete('/api/comments/1000')
+            .expect(404);
+          expect(body.msg).to.equal('comment not found');
+        });
+        it('DELETE status:400, when passed an invalid id', async () => {
+          const { body } = await request(app)
+            .delete('/api/comments/not-an-id')
+            .expect(400);
+          expect(body.msg).to.equal('Bad Request');
+        });
 
         it('INVALID METHOD status:405', async () => {
           const { body } = await request(app)
