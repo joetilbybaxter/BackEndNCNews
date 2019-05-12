@@ -164,7 +164,7 @@ describe('/', () => {
       describe('/:article_id', () => {
         it('GET status:200, serves up an article by id', async () => {
           const { body } = await request(app)
-            .get('/api/articles/1')
+            .get('/api/articles/2')
             .expect(200);
           expect(body).to.contain.keys('article');
           expect(body.article).to.be.an('object');
@@ -176,6 +176,13 @@ describe('/', () => {
             'created_at',
             'votes',
           );
+          expect(body.article.article_id).to.equal(2);
+        });
+        it('GET status:200, serves up an article with corresponding comment_count', async () => {
+          const { body } = await request(app)
+            .get('/api/articles/2')
+            .expect(200);
+          expect(body.article.comment_count).to.equal('0');
         });
       });
     });

@@ -26,8 +26,12 @@ exports.selectArticleById = async article_id => {
     .select('articles.*')
     .count({ comment_count: 'comment_id' })
     .from('articles')
+    .where({ 'articles.article_id': article_id })
     .leftJoin('comments', 'comments.belongs_to', 'articles.article_id')
     .groupBy('article_id')
     .first();
+  if (!article) {
+    return Promise.reject({ status: 404, msg: 'article_id not found' });
+  }
   return article;
 };

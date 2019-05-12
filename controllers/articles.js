@@ -14,7 +14,7 @@ exports.getArticles = async (req, res) => {
 };
 
 exports.getArticleById = async (req, res) => {
-  const { article_id } = req.query;
+  const { article_id } = req.params;
   const article = await selectArticleById(article_id);
   res.send({ article });
 };
