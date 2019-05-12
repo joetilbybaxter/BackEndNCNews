@@ -4,6 +4,7 @@ const {
   getArticleById,
   patchArticleById,
 } = require('../controllers/articles');
+const { getComments } = require('../controllers/comments');
 const { withErrorHandling, methodNotAllowed } = require('../errors');
 
 articlesRouter
@@ -16,5 +17,9 @@ articlesRouter
   .get(withErrorHandling(getArticleById))
   .patch(withErrorHandling(patchArticleById))
   .all(methodNotAllowed);
+
+articlesRouter
+  .route('/:article_id/comments')
+  .get(withErrorHandling(getComments));
 
 module.exports = articlesRouter;

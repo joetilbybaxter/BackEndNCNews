@@ -249,6 +249,71 @@ describe('/', () => {
             .expect(400);
           expect(body.msg).to.equal('Bad Request');
         });
+
+        describe('/comments', () => {
+          it('GET status:200, serves an array of all comments belonging to an article', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments')
+              .expect(200);
+            expect(body).to.contain.keys('comments');
+            expect(body.comments).to.be.an('array');
+            expect(body.comments[0]).to.contain.keys(
+              'comment_id',
+              'body',
+              'belongs_to',
+              'author',
+              'votes',
+              'created_at',
+            );
+            expect(body.comments).to.satisfy(comments => {
+              return comments.every(({ belongs_to }) => {
+                return belongs_to === 1;
+              });
+            });
+          });
+          it('GET status:404, when passed a valid non-existent article_id', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1000/comments')
+              .expect(404);
+            expect(body.msg).to.equal('Article Not Found');
+          });
+          it('GET status:200, serves an empty array when article has no comments', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/2/comments')
+              .expect(200);
+            expect(body.comments).to.eql([]);
+          });
+          it('GET status:200, comments are sorted by date created by default', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments')
+              .expect(200);
+            expect(body.comments).to.be.descendingBy('created_at');
+          });
+          it('GET status:200, accepts a sort_by query', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments?sort_by=body')
+              .expect(200);
+            expect(body.comments).to.be.descendingBy('body');
+          });
+          it('GET status:400, for invalid sort_by query', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments?sort_by=not-a-column')
+              .expect(400);
+            expect(body.msg).to.equal('Bad Request');
+          });
+          it('GET status:200, accepts an order query', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments?order=asc')
+              .expect(200);
+            expect(body.comments).to.be.ascendingBy('created_at');
+          });
+          it('GET status:400, for invalid order query', async () => {
+            const { body } = await request(app)
+              .get('/api/articles/1/comments?order=not-asc-or-desc')
+              .expect(400);
+            expect(body.msg).to.equal('Bad Request: Invalid order query');
+          });
+        });
       });
     });
   });
