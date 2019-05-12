@@ -394,6 +394,20 @@ describe('/', () => {
             .expect(400);
           expect(body.msg).to.equal('Bad Request');
         });
+        it('PATCH status:404, when sent an valid non-existent comment_id', async () => {
+          const { body } = await request(app)
+            .patch('/api/comments/1000')
+            .send({ inc_votes: 1 })
+            .expect(404);
+          expect(body.msg).to.equal('comment not found');
+        });
+        it('PATCH status:400, when sent an invalid comment_id', async () => {
+          const { body } = await request(app)
+            .patch('/api/comments/not-an-id')
+            .send({ inc_votes: 1 })
+            .expect(400);
+          expect(body.msg).to.equal('Bad Request');
+        });
 
         it('DELETE status:204, deletes a comment', () => {
           return request(app)

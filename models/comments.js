@@ -23,6 +23,9 @@ exports.updateCommentById = async (comment_id, { inc_votes }) => {
     .where({ comment_id })
     .increment('votes', inc_votes || 0)
     .returning('*');
+  if (!comment) {
+    return Promise.reject({ status: 404, msg: 'comment not found' });
+  }
   return comment;
 };
 
