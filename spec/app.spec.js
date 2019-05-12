@@ -242,7 +242,7 @@ describe('/', () => {
             .expect(200);
           expect(body.article.votes).to.equal(94);
         });
-        it('PATCH status:404, when passed an invalid ', async () => {
+        it('PATCH status:400, when passed an invalid inc_votes property', async () => {
           const { body } = await request(app)
             .patch('/api/articles/1')
             .send({ inc_votes: 'not a number' })
@@ -356,6 +356,50 @@ describe('/', () => {
               .expect(405);
             expect(body.msg).to.equal('Method Not Allowed');
           });
+        });
+      });
+    });
+
+    describe('/comments', () => {
+      describe('/:comment_id', () => {
+        it('PATCH status:200, increments votes when passed a inc_vote property', async () => {
+          const { body } = await request(app)
+            .patch('/api/comments/1')
+            .send({ inc_votes: 1 })
+            .expect(200);
+          expect(body.comment.votes).to.equal(17);
+        });
+        it('PATCH status:200, votes stay the same when not sent inc_votes property', async () => {
+          const { body } = await request(app)
+            .patch('/api/comments/1')
+            .send({})
+            .expect(200);
+          expect(body.comment.votes).to.equal(16);
+        });
+        it('PATCH status:200, votes are persistent', async () => {
+          await request(app)
+            .patch('/api/comments/1')
+            .send({ inc_votes: 10 })
+            .expect(200);
+          const { body } = await request(app)
+            .patch('/api/comments/1')
+            .send({ inc_votes: 1 })
+            .expect(200);
+          expect(body.comment.votes).to.equal(27);
+        });
+        it('PATCH status:400, when sent an invalid inc_votes property', async () => {
+          const { body } = await request(app)
+            .patch('/api/comments/1')
+            .send({ inc_votes: 'not a number' })
+            .expect(400);
+          expect(body.msg).to.equal('Bad Request');
+        });
+
+        it('INVALID METHOD status:405', async () => {
+          const { body } = await request(app)
+            .put('/api/comments/1')
+            .expect(405);
+          expect(body.msg).to.equal('Method Not Allowed');
         });
       });
     });

@@ -1,4 +1,8 @@
-const { selectComments, insertComment } = require('../models/comments');
+const {
+  selectComments,
+  insertComment,
+  updateCommentById,
+} = require('../models/comments');
 const { checkOrderQuery } = require('./utils');
 
 exports.getComments = async (req, res) => {
@@ -18,4 +22,10 @@ exports.postComment = async (req, res) => {
   const { username: author, body } = req.body;
   const comment = await insertComment({ belongs_to, author, body });
   res.status(201).send({ comment });
+};
+
+exports.patchCommentById = async (req, res) => {
+  const { comment_id } = req.params;
+  const comment = await updateCommentById(comment_id, req.body);
+  res.send({ comment });
 };

@@ -17,3 +17,11 @@ exports.insertComment = async commentToAdd => {
   const [comment] = await connection('comments').insert(commentToAdd, '*');
   return comment;
 };
+
+exports.updateCommentById = async (comment_id, { inc_votes }) => {
+  const [comment] = await connection('comments')
+    .where({ comment_id })
+    .increment('votes', inc_votes || 0)
+    .returning('*');
+  return comment;
+};
