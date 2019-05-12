@@ -184,6 +184,12 @@ describe('/', () => {
             .expect(200);
           expect(body.article.comment_count).to.equal('0');
         });
+        it('GET status:404, when passed a valid non-existent article_id', async () => {
+          const { body } = await request(app)
+            .get('/api/articles/9999')
+            .expect(404);
+          expect(body.msg).to.equal('article_id not found');
+        });
       });
     });
   });
