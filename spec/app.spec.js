@@ -409,5 +409,31 @@ describe('/', () => {
         });
       });
     });
+
+    describe('/users', () => {
+      describe('/:username', () => {
+        it('GET status:200, serves up correct user', async () => {
+          const { body } = await request(app)
+            .get('/api/users/rogersop')
+            .expect(200);
+          expect(body).to.contain.keys('user');
+          expect(body.user).to.contain.keys('username', 'avatar_url', 'name');
+          expect(body.user.username).to.equal('rogersop');
+        });
+        it('GET status:404, when passed a valid username that does not exist', async () => {
+          const { body } = await request(app)
+            .get('/api/users/not-a-user')
+            .expect(404);
+          expect(body.msg).to.equal('user not found');
+        });
+
+        it('INVALID METHOD status:405', async () => {
+          const { body } = await request(app)
+            .put('/api/users/rogersop')
+            .expect(405);
+          expect(body.msg).to.equal('Method Not Allowed');
+        });
+      });
+    });
   });
 });
