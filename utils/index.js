@@ -12,9 +12,9 @@ const createRef = (arr, key, value) => {
 
 const formatComments = (comments, idLookup) => {
   return comments.map(({ created_by, belongs_to, ...restOfComment }) => {
-    belongs_to = idLookup[belongs_to];
+    const article_id = idLookup[belongs_to];
     restOfComment = convertTimestampToDate(restOfComment);
-    return { belongs_to, author: created_by, ...restOfComment };
+    return { article_id, author: created_by, ...restOfComment };
   });
 };
 

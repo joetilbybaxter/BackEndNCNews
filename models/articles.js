@@ -11,8 +11,8 @@ exports.selectArticles = async ({ sort_by, order, author, topic }) => {
       if (author) query.where({ 'articles.author': author });
       if (topic) query.where({ 'articles.topic': topic });
     })
-    .leftJoin('comments', 'comments.belongs_to', 'articles.article_id')
-    .groupBy('article_id');
+    .leftJoin('comments', 'comments.article_id', 'articles.article_id')
+    .groupBy('articles.article_id');
 
   if (!articles.length) {
     await checkExists('users', 'username', author);
@@ -27,8 +27,8 @@ exports.selectArticleById = async article_id => {
     .count({ comment_count: 'comment_id' })
     .from('articles')
     .where({ 'articles.article_id': article_id })
-    .leftJoin('comments', 'comments.belongs_to', 'articles.article_id')
-    .groupBy('article_id')
+    .leftJoin('comments', 'comments.article_id', 'articles.article_id')
+    .groupBy('articles.article_id')
     .first();
   if (!article) {
     return Promise.reject({ status: 404, msg: 'article_id not found' });

@@ -19,9 +19,9 @@ exports.getComments = async (req, res) => {
 };
 
 exports.postComment = async (req, res) => {
-  const { article_id: belongs_to } = req.params;
+  const { article_id } = req.params;
   const { username: author, body } = req.body;
-  const comment = await insertComment({ belongs_to, author, body });
+  const comment = await insertComment({ article_id, author, body });
   res.status(201).send({ comment });
 };
 

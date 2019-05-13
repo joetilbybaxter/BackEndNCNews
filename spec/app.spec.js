@@ -260,14 +260,14 @@ describe('/', () => {
             expect(body.comments[0]).to.contain.keys(
               'comment_id',
               'body',
-              'belongs_to',
+              'article_id',
               'author',
               'votes',
               'created_at',
             );
             expect(body.comments).to.satisfy(comments => {
-              return comments.every(({ belongs_to }) => {
-                return belongs_to === 1;
+              return comments.every(({ article_id }) => {
+                return article_id === 1;
               });
             });
           });
@@ -326,12 +326,12 @@ describe('/', () => {
               'author',
               'created_at',
               'votes',
-              'belongs_to',
+              'article_id',
             );
             expect(body.comment.body).to.equal(commentToPost.body);
             expect(body.comment.author).to.equal(commentToPost.username);
             expect(body.comment.votes).to.equal(0);
-            expect(body.comment.belongs_to).to.equal(2);
+            expect(body.comment.article_id).to.equal(2);
           });
           it('POST status:400, when posted comment is missing properties', async () => {
             const commentToPost = { username: 'rogersop' };

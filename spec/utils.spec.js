@@ -93,8 +93,8 @@ describe('formatComments', () => {
     const comments = [{ belongs_to: 'title1' }, { belongs_to: 'title2' }];
     const ref = { title1: 1, title2: 2 };
     const formattedComments = formatComments(comments, ref);
-    expect(formattedComments[0].belongs_to).to.equal(1);
-    expect(formattedComments[1].belongs_to).to.equal(2);
+    expect(formattedComments[0].article_id).to.equal(1);
+    expect(formattedComments[1].article_id).to.equal(2);
   });
   it('converts created_at timestamp to a date', () => {
     const timestamp = Date.now();
