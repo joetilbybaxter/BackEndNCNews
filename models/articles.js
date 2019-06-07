@@ -15,8 +15,10 @@ exports.selectArticles = async ({ sort_by, order, author, topic }) => {
     .groupBy('articles.article_id');
 
   if (!articles.length) {
-    await checkExists('users', 'username', author);
-    await checkExists('topics', 'slug', topic);
+    await Promise.all([
+      checkExists('users', 'username', author),
+      checkExists('topics', 'slug', topic),
+    ]);
   }
   return articles;
 };
