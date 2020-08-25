@@ -1,6 +1,6 @@
-# NC-News api
+# NC-News API
 
-In order to use this for your front end project you will need to fork this repo host using the instructions below.
+In order to use this API for your front end project you will need to fork this repo and host following the instructions below.
 
 ## Hosting a PSQL DB using Heroku
 
