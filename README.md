@@ -1,6 +1,6 @@
 # NC-News api
 
-Note there is no `knexfile` for this project, if you wish to run this locally you will need to make your own.
+In order to use this for your front end project you will need to fork this repo host using the instructions below.
 
 ## Hosting a PSQL DB using Heroku
 
