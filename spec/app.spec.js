@@ -158,6 +158,65 @@ describe('/', () => {
           .expect(404);
         expect(body.msg).to.equal('Topic Not Found');
       });
+      it('POST status: 201', async () => {
+        const articleToPost = {
+          username: 'rogersop',
+          title: 'new title',
+          body: 'new article',
+          topic: 'mitch',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(201);
+        expect(body.article).to.have.keys(
+          'article_id',
+          'body',
+          'author',
+          'topic',
+          'created_at',
+          'votes',
+          'title'
+        );
+        expect(body.article.author).to.equal(articleToPost.username);
+        expect(body.article.title).to.equal(articleToPost.title);
+        expect(body.article.topic).to.equal(articleToPost.topic);
+        expect(body.article.votes).to.equal(0);
+      });
+      it('POST status: 400, when posted article is missing properties', async () => {
+        const articleToPost = { username: 'rogersop' };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(400);
+        expect(body.msg).to.equal('Bad Request');
+      });
+      it('POST status: 404, when posting an article for a non-existant author ', async () => {
+        const articleToPost = {
+          username: 'douglashellowell',
+          title: 'new title',
+          body: 'new article',
+          topic: 'mitch',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(404);
+        expect(body.msg).to.equal('Not Found');
+      });
+      it('POST status: 404, when posting an article for a non-existant topic ', async () => {
+        const articleToPost = {
+          username: 'rogersop',
+          title: 'new title',
+          body: 'new article',
+          topic: 'supersmashbros',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(404);
+        expect(body.msg).to.equal('Not Found');
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')

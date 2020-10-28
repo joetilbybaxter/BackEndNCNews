@@ -52,3 +52,8 @@ exports.updateArticleById = async (article_id, { inc_votes }) => {
     .returning('*');
   return article;
 };
+
+exports.insertArticle = async (articleToAdd) => {
+  const [article] = await connection('articles').insert(articleToAdd, '*');
+  return article;
+};
