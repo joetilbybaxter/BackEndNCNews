@@ -57,6 +57,10 @@ describe('/', () => {
           'votes',
         );
       });
+      it('GET status:200, article data does not contain body', async () => {
+        const { body } = await request(app).get('/api/articles').expect(200);
+        expect(body.articles[0]).not.to.contain.keys('body');
+      });
       it('GET status:200, articles are sorted descending by date by default', async () => {
         const { body } = await request(app)
           .get('/api/articles')
