@@ -219,6 +219,12 @@ describe('/', () => {
       });
       it('DELETE status:204, deletes an article', async () => {
         await request(app).delete('/api/articles/1').expect(204);
+        await request(app).get('/api/articles/1').expect(404);
+      });
+      it('DELETE status:204, deletes all comments associated with deleted article', async () => {
+        await request(app).get('/api/articles/1/comments').expect(200);
+        await request(app).delete('/api/articles/1').expect(204);
+        await request(app).get('/api/articles/1/comments').expect(404);
       });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
