@@ -217,6 +217,9 @@ describe('/', () => {
           .expect(404);
         expect(body.msg).to.equal('Not Found');
       });
+      it('DELETE status:204, deletes an article', async () => {
+        await request(app).delete('/api/articles/1').expect(204);
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')

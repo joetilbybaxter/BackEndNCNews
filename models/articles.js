@@ -57,3 +57,13 @@ exports.insertArticle = async (articleToAdd) => {
   const [article] = await connection('articles').insert(articleToAdd, '*');
   return article;
 };
+
+exports.removeArticleById = async (article_id) => {
+  const numberOfDeletions = await connection
+    .delete()
+    .from('articles')
+    .where({ article_id });
+  if (!numberOfDeletions) {
+    return Promise.reject({ status: 404, msg: 'Article not found' });
+  }
+};

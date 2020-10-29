@@ -3,6 +3,7 @@ const {
   selectArticleById,
   updateArticleById,
   insertArticle,
+  removeArticleById,
 } = require('../models/articles');
 const { checkOrderQuery } = require('./utils');
 
@@ -34,4 +35,11 @@ exports.postArticle = async (req, res) => {
   const { username: author, title, body, topic } = req.body;
   const article = await insertArticle({ author, title, body, topic });
   res.status(201).send({ article });
+};
+
+exports.deleteArticleById = async (req, res) => {
+  console.log('in deleteArticleById');
+  const { article_id } = req.params;
+  await removeArticleById(article_id);
+  res.sendStatus(204);
 };
