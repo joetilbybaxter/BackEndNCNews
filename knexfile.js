@@ -21,6 +21,11 @@ const customConfig = {
     connection: {
       database: 'nc_news_api_test',
     },
+    log: {
+      warn(message) {
+        if (!message.includes('FsMigrations')) console.log(message);
+      },
+    },
   },
   production: {
     connection: {
