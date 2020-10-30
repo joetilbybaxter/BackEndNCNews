@@ -48,9 +48,10 @@ describe('/', () => {
           .expect(200);
         expect(body).to.contain.keys('articles');
         expect(body.articles).to.be.an('array');
-        expect(body.articles[0]).to.contain.keys(
+        expect(body.articles[0]).to.have.keys(
           'article_id',
           'author',
+          'comment_count',
           'title',
           'topic',
           'created_at',
@@ -515,6 +516,16 @@ describe('/', () => {
     });
 
     describe('/users', () => {
+      it('GET status:200, serves an array of users', async () => {
+        const {body} = await request(app).get('/api/users').expect(200)
+        expect(body).to.have.keys('users');
+        expect(body.users).to.be.an('array')
+        expect(body.users[0]).to.have.keys('username', 'name', 'avatar_url')
+      });
+      it('INVALID METHOD status:405', async() => {
+        const {body} = await request(app).put('/api/users').expect(405)
+        expect(body.msg).to.equal('Method Not Allowed')
+      })
       describe('/:username', () => {
         it('GET status:200, serves up correct user', async () => {
           const { body } = await request(app)
