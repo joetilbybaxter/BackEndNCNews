@@ -69,6 +69,39 @@
 
     <article>
       <details>
+        <summary>POST /api/articles</summary>
+        <details>
+          <summary>Example Request</summary>
+          <pre>
+            {
+              body: String,
+              username: String,
+              title: String,
+              topic: String
+            }
+          </pre>
+        </details>
+        <details>
+          <summary>Example Response</summary>
+          <pre>
+            {
+              article: {
+                article_id: Number,
+                created_at: String,
+                body: String,
+                author: String,
+                title: String,
+                topic: String,
+                votes: Number
+              }
+            }
+          </pre>
+        </details>
+      </details>
+    </article>
+
+    <article>
+      <details>
         <summary>GET /api/articles/:article_id</summary>
         <details>
           <summary>Example Response</summary>
@@ -113,6 +146,16 @@
               }
             }
           </pre>
+        </details>
+      </details>
+    </article>
+
+    <article>
+      <details>
+        <summary>DELETE /api/article/:article_id</summary>
+        <details>
+          <summary>Example Response</summary>
+          <pre>{}</pre>
         </details>
       </details>
     </article>
@@ -208,6 +251,26 @@
         <details>
           <summary>Example Response</summary>
           <pre>{}</pre>
+        </details>
+      </details>
+    </article>
+
+    <article>
+      <details>
+        <summary>GET /api/users</summary>
+        <details>
+          <summary>Example Response</summary>
+          <pre>
+            {
+              users: [
+                {
+                  username: String,
+                  name: String,
+                  avatar_url: String
+                }
+              ]
+            }
+          </pre>
         </details>
       </details>
     </article>

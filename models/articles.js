@@ -3,7 +3,14 @@ const { checkExists } = require('./utils');
 
 exports.selectArticles = async ({ sort_by, order, author, topic }) => {
   const articles = await connection
-    .select('articles.*')
+  .select(
+    'articles.article_id',
+    'articles.title',
+    'articles.created_at',
+    'articles.votes',
+    'articles.topic',
+    'articles.author'
+  )
     .count({ comment_count: 'comment_id' })
     .from('articles')
     .orderBy(sort_by || 'created_at', order || 'desc')
@@ -44,4 +51,19 @@ exports.updateArticleById = async (article_id, { inc_votes }) => {
     .increment('votes', inc_votes || 0)
     .returning('*');
   return article;
+};
+
+exports.insertArticle = async (articleToAdd) => {
+  const [article] = await connection('articles').insert(articleToAdd, '*');
+  return article;
+};
+
+exports.removeArticleById = async (article_id) => {
+  const numberOfDeletions = await connection
+    .delete()
+    .from('articles')
+    .where({ article_id });
+  if (!numberOfDeletions) {
+    return Promise.reject({ status: 404, msg: 'Article not found' });
+  }
 };

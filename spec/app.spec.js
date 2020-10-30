@@ -48,14 +48,19 @@ describe('/', () => {
           .expect(200);
         expect(body).to.contain.keys('articles');
         expect(body.articles).to.be.an('array');
-        expect(body.articles[0]).to.contain.keys(
+        expect(body.articles[0]).to.have.keys(
           'article_id',
           'author',
+          'comment_count',
           'title',
           'topic',
           'created_at',
           'votes',
         );
+      });
+      it('GET status:200, article data does not contain body', async () => {
+        const { body } = await request(app).get('/api/articles').expect(200);
+        expect(body.articles[0]).not.to.contain.keys('body');
       });
       it('GET status:200, articles are sorted descending by date by default', async () => {
         const { body } = await request(app)
@@ -153,6 +158,80 @@ describe('/', () => {
           .get('/api/articles?topic=not-a-topic')
           .expect(404);
         expect(body.msg).to.equal('Topic Not Found');
+      });
+      it('POST status: 201', async () => {
+        const articleToPost = {
+          username: 'rogersop',
+          title: 'new title',
+          body: 'new article',
+          topic: 'mitch',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(201);
+        expect(body.article).to.have.keys(
+          'article_id',
+          'body',
+          'author',
+          'topic',
+          'created_at',
+          'votes',
+          'title'
+        );
+        expect(body.article.author).to.equal(articleToPost.username);
+        expect(body.article.title).to.equal(articleToPost.title);
+        expect(body.article.topic).to.equal(articleToPost.topic);
+        expect(body.article.votes).to.equal(0);
+      });
+      it('POST status: 400, when posted article is missing properties', async () => {
+        const articleToPost = { username: 'rogersop' };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(400);
+        expect(body.msg).to.equal('Bad Request');
+      });
+      it('POST status: 404, when posting an article for a non-existant author ', async () => {
+        const articleToPost = {
+          username: 'douglashellowell',
+          title: 'new title',
+          body: 'new article',
+          topic: 'mitch',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(404);
+        expect(body.msg).to.equal('Not Found');
+      });
+      it('POST status: 404, when posting an article for a non-existant topic ', async () => {
+        const articleToPost = {
+          username: 'rogersop',
+          title: 'new title',
+          body: 'new article',
+          topic: 'supersmashbros',
+        };
+        const { body } = await request(app)
+          .post('/api/articles')
+          .send(articleToPost)
+          .expect(404);
+        expect(body.msg).to.equal('Not Found');
+      });
+      it('DELETE status:204, deletes an article', async () => {
+        await request(app).delete('/api/articles/1').expect(204);
+        await request(app).get('/api/articles/1').expect(404);
+      });
+      it('DELETE status:204, deletes all comments associated with deleted article', async () => {
+        await request(app).get('/api/articles/1/comments').expect(200);
+        await request(app).delete('/api/articles/1').expect(204);
+        await request(app).get('/api/articles/1/comments').expect(404);
+      });
+      it('DELETE status:404, when passed article_id that doesnt exist', async () => {
+        await request(app).delete('/api/articles/9999').expect(404)
+      });
+      it('DELETE status:400, when passed an invalid article_id', async () => {
+        await request(app).delete('/api/articles/onetwothree').expect(400)
       });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
@@ -437,6 +516,16 @@ describe('/', () => {
     });
 
     describe('/users', () => {
+      it('GET status:200, serves an array of users', async () => {
+        const {body} = await request(app).get('/api/users').expect(200)
+        expect(body).to.have.keys('users');
+        expect(body.users).to.be.an('array')
+        expect(body.users[0]).to.have.keys('username', 'name', 'avatar_url')
+      });
+      it('INVALID METHOD status:405', async() => {
+        const {body} = await request(app).put('/api/users').expect(405)
+        expect(body.msg).to.equal('Method Not Allowed')
+      })
       describe('/:username', () => {
         it('GET status:200, serves up correct user', async () => {
           const { body } = await request(app)

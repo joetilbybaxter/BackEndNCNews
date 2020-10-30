@@ -14,12 +14,17 @@ const baseConfig = {
 const customConfig = {
   development: {
     connection: {
-      database: 'nc_news',
+      database: 'nc_news_api',
     },
   },
   test: {
     connection: {
-      database: 'nc_news_test',
+      database: 'nc_news_api_test',
+    },
+    log: {
+      warn(message) {
+        if (!message.includes('FsMigrations')) console.log(message);
+      },
     },
   },
   production: {
