@@ -226,6 +226,12 @@ describe('/', () => {
         await request(app).delete('/api/articles/1').expect(204);
         await request(app).get('/api/articles/1/comments').expect(404);
       });
+      it('DELETE status:404, when passed article_id that doesnt exist', async () => {
+        await request(app).delete('/api/articles/9999').expect(404)
+      });
+      it('DELETE status:400, when passed an invalid article_id', async () => {
+        await request(app).delete('/api/articles/onetwothree').expect(400)
+      });
       it('INVALID METHOD status:405', async () => {
         const { body } = await request(app)
           .put('/api/articles')
